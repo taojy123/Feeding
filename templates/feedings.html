@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if error %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+    {% endif %}
+
+    {% if is_feeding %}
+        <p>正在哺乳...</p>
+        <a href="/{{ user.username }}/feedings/end/" class="btn btn-success btn-large">结束</a>
+    {% else %}
+        <a href="/{{ user.username }}/feedings/left/" class="btn btn-warning btn-large">左侧开始</a>
+        <a href="/{{ user.username }}/feedings/right/" class="btn btn-warning btn-large">右侧开始</a>
+    {% endif %}
+
+    <br>
+    <br>
+
+    <table id="table">
+        <thead>
+            <tr>
+                <th data-sortable="true">日期</th>
+                <th data-sortable="true">位置</th>
+                <th data-sortable="true">开始</th>
+                <th data-sortable="true">结束</th>
+                <th data-sortable="true">持续</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for feeding in feedings %}
+                <tr >
+                    <td>{{ feeding.begin|date:'Y-m-d' }}</td>
+                    <td>{{ feeding.get_position_display }}</td>
+                    <td>{{ feeding.begin|time:'H:i' }}</td>
+                    <td>{{ feeding.end|time:'H:i' }}</td>
+                    <td>
+                        <a href="http://127.0.0.1:8113/admin/feeding/feeding/{{ feeding.id }}/change/" >
+                            {{ feeding.duration }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <br>
+
+    <span class="label label-info">{{ user.username }}</span>
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $('#table').bootstrapTable();
+        $("#feedings").addClass('active');
+    </script>
+{% endblock %}
