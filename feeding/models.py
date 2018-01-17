@@ -19,7 +19,7 @@ class Feeding(models.Model):
     @property
     def duration(self):
         if not self.end:
-            return '--'
+            self.end = timezone.now()
         t = self.end - self.begin
         total_seconds = t.total_seconds()
         m = (total_seconds + 30) / 60

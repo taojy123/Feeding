@@ -57,5 +57,9 @@
     <script>
         $('#table').bootstrapTable();
         $("#feedings").addClass('active');
+
+        setTimeout(function () {
+            top.location.reload()
+        }, 30000)
     </script>
 {% endblock %}
