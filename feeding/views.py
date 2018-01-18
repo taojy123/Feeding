@@ -63,6 +63,19 @@ def end(request, username):
     return HttpResponseRedirect('/%s/feedings/?error=%s' % (username, error))
 
 
+def manual(request, username):
+    user = get_object_or_404(User, username=username)
+    ml = int(request.GET.get('ml', 0))
+    error = ''
+    if not ml:
+        error = u'请输入正确的毫升数!'
+    elif get_is_feeding(user):
+        error = u'请先结束，再开始手喂!'
+    else:
+        Feeding.objects.create(user=user, position=3, begin=timezone.now(), end=timezone.now(), ml=ml)
+    return HttpResponseRedirect('/%s/feedings/?error=%s' % (username, error))
+
+
 def login(request):
     msg = ''
     next_url = request.GET.get('next', '/')

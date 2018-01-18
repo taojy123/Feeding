@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^(.*?)/feedings/left/$', left),
     url(r'^(.*?)/feedings/right/$', right),
     url(r'^(.*?)/feedings/end/$', end),
+    url(r'^(.*?)/feedings/manual/$', manual),
     
     url(r'^login/$', login),
     url(r'^logout/$', logout),

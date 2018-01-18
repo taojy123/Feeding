@@ -43,7 +43,7 @@ admin.site.unregister(Site)
 
 @admin.register(Feeding)
 class FeedingAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'position', 'begin', 'end']
+    list_display = ['id', 'user', 'position', 'begin', 'end', 'display']
     list_filter = ['user', 'begin']
     raw_id_fields = ['user']
 

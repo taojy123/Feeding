@@ -12,6 +12,7 @@
     {% else %}
         <a href="/{{ user.username }}/feedings/left/" class="btn btn-warning btn-large">左侧开始</a>
         <a href="/{{ user.username }}/feedings/right/" class="btn btn-warning btn-large">右侧开始</a>
+        <a id="manual" class="btn btn-warning btn-large">手喂</a>
     {% endif %}
 
     <br>
@@ -36,7 +37,7 @@
                     <td>{{ feeding.end|time:'H:i' }}</td>
                     <td>
                         <a href="/admin/feeding/feeding/{{ feeding.id }}/change/" >
-                            {{ feeding.duration }}
+                            {{ feeding.display }}
                         </a>
                     </td>
                 </tr>
@@ -58,8 +59,17 @@
         $('#table').bootstrapTable();
         $("#feedings").addClass('active');
 
+        $("#manual").click(function () {
+            var ml = prompt('输入手喂量(毫升)');
+            if(!ml){
+                return
+            }
+            top.location.href = '/{{ user.username }}/feedings/manual/?ml=' + ml;
+        });
+
         setTimeout(function () {
             top.location.reload()
         }, 30000)
+
     </script>
 {% endblock %}
