@@ -23,6 +23,7 @@ def index(request):
 
 
 def feedings(request, username):
+    info = request.GET.get('info')
     error = request.GET.get('error')
     is_all = request.GET.get('is_all')
     user = get_object_or_404(User, username=username)
@@ -38,6 +39,7 @@ def feedings(request, username):
         for f in feedings_24h:
             ts += (f.end - f.begin).total_seconds()
         rate_24h = 100.0 * ts / (24 * 3600)
+        rate_24h = '%.4f' % rate_24h
     else:
         feedings = feedings[:30]
 
@@ -98,14 +100,16 @@ def manual(request, username):
 
 
 def feedings_login(request, username):
-    error = ''
-    password = request.POST.get('password', '')
+    error = info = ''
+    password = request.GET.get('password', '')
     user = auth.authenticate(username=username, password=password)
+
     if user is not None and user.is_active:
         auth.login(request, user)
+        info = u'验证成功 请重新之前操作'
     else:
         error = u'密码不正确'
-    url = '/%s/feedings/?error=%s' % (username, error)
+    url = '/%s/feedings/?error=%s&info=%s' % (username, error, info)
     return HttpResponseRedirect(url)
 
 

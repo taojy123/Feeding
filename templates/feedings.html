@@ -6,6 +6,10 @@
         <div class="alert alert-danger" role="alert">{{ error }}</div>
     {% endif %}
 
+    {% if info %}
+        <div class="alert alert-info" role="alert">{{ info }}</div>
+    {% endif %}
+
     {% if is_feeding %}
         <p>正在哺乳...</p>
         <a href="/{{ user.username }}/feedings/end/" class="btn btn-success btn-large login_required">结束</a>
