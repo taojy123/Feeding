@@ -8,11 +8,11 @@
 
     {% if is_feeding %}
         <p>正在哺乳...</p>
-        <a href="/{{ user.username }}/feedings/end/" class="btn btn-success btn-large">结束</a>
+        <a href="/{{ user.username }}/feedings/end/" class="btn btn-success btn-large login_required">结束</a>
     {% else %}
-        <a href="/{{ user.username }}/feedings/left/" class="btn btn-warning btn-large">左侧开始</a>
-        <a href="/{{ user.username }}/feedings/right/" class="btn btn-warning btn-large">右侧开始</a>
-        <a id="manual" class="btn btn-warning btn-large">手喂</a>
+        <a href="/{{ user.username }}/feedings/left/" class="btn btn-warning btn-large login_required">左侧开始</a>
+        <a href="/{{ user.username }}/feedings/right/" class="btn btn-warning btn-large login_required">右侧开始</a>
+        <a id="manual" class="btn btn-warning btn-large login_required">手喂</a>
     {% endif %}
 
     <br>
@@ -36,7 +36,7 @@
                     <td>{{ feeding.begin|time:'H:i' }}</td>
                     <td>{{ feeding.end|time:'H:i' }}</td>
                     <td>
-                        <a href="/admin/feeding/feeding/{{ feeding.id }}/change/" >
+                        <a href="/admin/feeding/feeding/{{ feeding.id }}/change/" class="login_required">
                             {{ feeding.display }}
                         </a>
                     </td>
@@ -45,10 +45,28 @@
         </tbody>
     </table>
 
-
     <br>
 
-    <span class="label label-info">{{ user.username }}</span>
+    {% if is_all %}
+
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-info">24h 喂食次数：{{ count_24h }}</li>
+            <li class="list-group-item list-group-item-info">24h 喂时比率：{{ rate_24h }}%</li>
+        </ul>
+
+        <a href="/{{ username }}/feedings/" class="btn btn-warning">简化数据</a>
+
+    {% else %}
+
+        <a href="/{{ username }}/feedings/?is_all=1" class="btn btn-warning">详细数据</a>
+
+    {% endif %}
+
+    <br>
+    <br>
+
+    <span class="label label-primary" style="float: right;">{{ user.username }}</span>
+
 
 
 {% endblock %}
@@ -66,6 +84,16 @@
             }
             top.location.href = '/{{ user.username }}/feedings/manual/?ml=' + ml;
         });
+
+        $(".login_required").click(function () {
+            {% if is_login %}
+                return true
+            {% else %}
+                var password = prompt('请输入管理密钥')
+                top.location.href = '/{{ username }}/feedings/login/?password=' + password
+                return false
+            {% endif %}
+        })
 
         setTimeout(function () {
             top.location.reload()

@@ -22,17 +22,32 @@ def index(request):
     return render_to_response('index.html', locals())
 
 
-# @login_required
 def feedings(request, username):
     error = request.GET.get('error')
+    is_all = request.GET.get('is_all')
     user = get_object_or_404(User, username=username)
     is_feeding = get_is_feeding(user)
+    is_login = request.user.is_authenticated and (request.user == user or request.user.is_superuser)
+
     feedings = Feeding.objects.filter(user=user).order_by('-begin')
+    if is_all:
+        t = timezone.now()-timezone.timedelta(hours=24)
+        feedings_24h = feedings.filter(begin__gte=t, end__isnull=False)
+        count_24h = feedings_24h.count()
+        ts = 0
+        for f in feedings_24h:
+            ts += (f.end - f.begin).total_seconds()
+        rate_24h = 100.0 * ts / (24 * 3600)
+    else:
+        feedings = feedings[:30]
+
     return render_to_response('feedings.html', locals())
 
 
+@login_required
 def left(request, username):
     user = get_object_or_404(User, username=username)
+    assert request.user == user or request.user.is_superuser
     error = ''
     if get_is_feeding(user):
         error = u'请先结束，再开始新的哺乳!'
@@ -41,8 +56,10 @@ def left(request, username):
     return HttpResponseRedirect('/%s/feedings/?error=%s' % (username, error))
 
 
+@login_required
 def right(request, username):
     user = get_object_or_404(User, username=username)
+    assert request.user == user or request.user.is_superuser
     error = ''
     if get_is_feeding(user):
         error = u'请先结束，再开始新的哺乳!'
@@ -51,8 +68,10 @@ def right(request, username):
     return HttpResponseRedirect('/%s/feedings/?error=%s' % (username, error))
 
 
+@login_required
 def end(request, username):
     user = get_object_or_404(User, username=username)
+    assert request.user == user or request.user.is_superuser
     error = ''
     if not get_is_feeding(user):
         error = u'当前没有正在进行的哺乳!'
@@ -63,8 +82,10 @@ def end(request, username):
     return HttpResponseRedirect('/%s/feedings/?error=%s' % (username, error))
 
 
+@login_required
 def manual(request, username):
     user = get_object_or_404(User, username=username)
+    assert request.user == user or request.user.is_superuser
     ml = int(request.GET.get('ml', 0))
     error = ''
     if not ml:
@@ -74,6 +95,18 @@ def manual(request, username):
     else:
         Feeding.objects.create(user=user, position=3, begin=timezone.now(), end=timezone.now(), ml=ml)
     return HttpResponseRedirect('/%s/feedings/?error=%s' % (username, error))
+
+
+def feedings_login(request, username):
+    error = ''
+    password = request.POST.get('password', '')
+    user = auth.authenticate(username=username, password=password)
+    if user is not None and user.is_active:
+        auth.login(request, user)
+    else:
+        error = u'密码不正确'
+    url = '/%s/feedings/?error=%s' % (username, error)
+    return HttpResponseRedirect(url)
 
 
 def login(request):
