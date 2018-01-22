@@ -18,6 +18,24 @@ def get_is_feeding(user):
     return Feeding.objects.filter(user=user).filter(end__isnull=True).exists()
 
 
+def get_statistics(feeding_qry):
+    count = feeding_qry.count()
+    ts = 0
+    mls = 0
+    for f in feeding_qry:
+        ts += (f.end - f.begin).total_seconds()
+        mls += f.ml
+    rate = 100.0 * ts / (24 * 3600)
+    rate = '%.2f' % rate
+
+    m, s = divmod(ts, 60)
+    h, m = divmod(m, 60)
+
+    t = '%d:%d:%d' % (h, m, s)
+
+    return count, mls, rate, t
+
+
 def index(request):
     return render_to_response('index.html', locals())
 
@@ -34,12 +52,23 @@ def feedings(request, username):
     if is_all:
         t = timezone.now()-timezone.timedelta(hours=24)
         feedings_24h = feedings.filter(begin__gte=t, end__isnull=False)
-        count_24h = feedings_24h.count()
-        ts = 0
-        for f in feedings_24h:
-            ts += (f.end - f.begin).total_seconds()
-        rate_24h = 100.0 * ts / (24 * 3600)
-        rate_24h = '%.4f' % rate_24h
+        count_24h, mls_24h, rate_24h, t_24h = get_statistics(feedings_24h)
+
+        today = timezone.now().date()
+
+        statistics = []
+        for i in range(10):
+            d = today - timezone.timedelta(days=i)
+            feeding_qry = feedings.filter(end__gte=d, end__lte=d+timezone.timedelta(days=1))
+            count, mls, rate, t = get_statistics(feeding_qry)
+            s = {
+                'date': d,
+                'count': count,
+                'mls': mls,
+                'rate': rate,
+                't': t,
+            }
+            statistics.append(s)
     else:
         feedings = feedings[:30]
 

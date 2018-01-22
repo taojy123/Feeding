@@ -54,8 +54,19 @@
     {% if is_all %}
 
         <ul class="list-group">
-            <li class="list-group-item list-group-item-info">24h 喂食次数：{{ count_24h }}</li>
-            <li class="list-group-item list-group-item-info">24h 喂时比率：{{ rate_24h }}%</li>
+            <li class="list-group-item list-group-item-info">24h 喂食次数：{{ count_24h }}, +手喂 {{ mls_24h }} ML</li>
+            <li class="list-group-item list-group-item-info">24h 喂时比率：{{ rate_24h }}%, {{ t_24h }}</li>
+        </ul>
+
+        <ul class="list-group">
+            {% for s in statistics %}
+                <li class="list-group-item list-group-item-warning">
+                    {{ s.date }}:
+                    {{ s.count }}次,
+                    +{{ s.mls }}ML,
+                    {{ s.rate }}%
+                </li>
+            {% endfor %}
         </ul>
 
         <a href="/{{ username }}/feedings/" class="btn btn-warning">简化数据</a>
