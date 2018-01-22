@@ -54,7 +54,7 @@ def feedings(request, username):
         feedings_24h = feedings.filter(begin__gte=t, end__isnull=False)
         count_24h, mls_24h, rate_24h, t_24h = get_statistics(feedings_24h)
 
-        today = timezone.now().date()
+        today = datetime.datetime.now().date()
 
         statistics = []
         for i in range(10):
