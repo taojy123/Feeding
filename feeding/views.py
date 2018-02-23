@@ -37,6 +37,7 @@ def get_statistics(feeding_qry):
 
 
 def index(request):
+    users = User.objects.filter(is_active=True).exclude(username='admin')
     return render_to_response('index.html', locals())
 
 
