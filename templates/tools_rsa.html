@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if msg %}
+        <div class="alert alert-danger">
+            {{ msg }}
+        </div>
+    {% endif %}
+
+    <form id="form" action="." method="POST" class="form-horizontal">
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >RSA 小助手</label>
+            <input type="submit" name="submit" class="btn btn-success" value="生成密钥对">
+            <input type="submit" name="submit" class="btn btn-info" value="提取公钥">
+            <input type="submit" name="submit" class="btn btn-default" value="私钥示例">
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >RSA 私钥:</label>
+            <textarea class="form-control" name="rsa_key" cols="80" rows="13">{{ rsa_key }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >RSA 公钥:</label>
+            <textarea class="form-control" name="rsa_pub_key" cols="80" rows="10" readonly>{{ rsa_pub_key }}</textarea>
+        </div>
+
+
+    </form>
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $('#table').bootstrapTable();
+        $("#feedings").addClass('active');
+
+        $("#manual").click(function () {
+            var ml = prompt('输入手喂量(毫升)');
+            if(!ml){
+                return
+            }
+            top.location.href = '/{{ user.username }}/feedings/manual/?ml=' + ml;
+        });
+
+        $(".login_required").click(function () {
+            {% if is_login %}
+                return true
+            {% else %}
+                var password = prompt('请输入管理密钥')
+                top.location.href = '/{{ username }}/feedings/login/?password=' + password
+                return false
+            {% endif %}
+        })
+
+        setTimeout(function () {
+            top.location.reload()
+        }, 30000)
+
+    </script>
+{% endblock %}

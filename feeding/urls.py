@@ -38,6 +38,9 @@ urlpatterns = [
     url(r'^password/$', password),
 
     url(r'^output/$', output),
+
+    url(r'^tools/rsa/$', tools_rsa),
+
 ]
 
 
