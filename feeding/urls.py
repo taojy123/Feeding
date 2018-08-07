@@ -14,11 +14,10 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-
 from django.conf.urls import url, include
 from django.contrib import admin
-
 from views import *
+from lazypage import urls as lazypage_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -40,6 +39,8 @@ urlpatterns = [
     url(r'^output/$', output),
 
     url(r'^tools/rsa/$', tools_rsa),
+
+    url(r'^lazypage/', lazypage_urls.get_urls()),
 
 ]
 

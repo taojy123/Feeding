@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'feeding',
+    'lazypage',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -167,3 +168,11 @@ EMAIL_HOST_USER = 'watchmen123456'
 EMAIL_HOST_PASSWORD = 'wm123456'
 
 
+LAZYPAGE = {
+    'ASYNC_BY_CELERY': False,
+    'CELERY_BROKER_URL': 'redis://127.0.0.1:6379/1',
+    'STORE_BY_REDIS': False,
+    'REDIS_DB': '5',
+    'EXPIRED_SECONDS': 300,
+    'POLLING_SECONDS': 2,
+}

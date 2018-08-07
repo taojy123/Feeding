@@ -13,6 +13,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
 import os
 
+from lazypage.decorators import lazypage_decorator
+
 from models import *
 
 
@@ -271,7 +273,12 @@ iN7MGIL/AA6/Bo3DVrmPc5spAiFOn5M2URapOnm3RVTJPUWD5OzLk/6AlpOx2YaK
 -----END RSA PRIVATE KEY-----"""
 
 
+@lazypage_decorator
 def tools_rsa(request):
+
+    import time
+    time.sleep(3)
+
     rsa_key = rsa_pub_key = ''
 
     if request.method == 'POST':
