@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from views import *
-from lazypage import urls as lazypage_urls
+import lazypage.urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -40,7 +40,7 @@ urlpatterns = [
 
     url(r'^tools/rsa/$', tools_rsa),
 
-    url(r'^lazypage/', lazypage_urls.get_urls()),
+    url(r'^lazypage/', lazypage.urls.get_urls()),
 
 ]
 
