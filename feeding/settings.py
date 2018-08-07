@@ -169,7 +169,7 @@ EMAIL_HOST_PASSWORD = 'wm123456'
 
 
 LAZYPAGE = {
-    'ASYNC_BY_CELERY': 1,
+    'ASYNC_BY_CELERY': False,
     'CELERY_BROKER_URL': 'redis://127.0.0.1:6379/1',
     'STORE_BY_REDIS': False,
     'REDIS_DB': '5',
