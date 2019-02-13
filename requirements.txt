@@ -1,4 +1,4 @@
-django==1.11.17
+django>=1.11.17
 uwsgi>=2.0.15
 xlwt>=1.3.0
 BeautifulSoup>=3.2.1
